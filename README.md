@@ -39,8 +39,12 @@ npm run parse-pdf    # 解析 PDF 題庫為 JSON
 - React 19 + TypeScript
 - TailwindCSS v4
 - Vite 8
-- react-router-dom (HashRouter)
+- react-router-dom (BrowserRouter)
 - GitHub Pages
+
+## 開發工具
+
+本專案核心開發由 **GitHub Copilot**（模型：**Claude Sonnet 4.6** / **Claude Opus 4.6**）輔助完成，包含元件設計、邏輯實作、題庫解析腳本及持續整合流程。
 
 ## 授權
 
