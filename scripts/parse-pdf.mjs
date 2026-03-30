@@ -110,8 +110,26 @@ function stripPageMarkers(text) {
 }
 
 /**
- * Parse questions from a chapter block of text.
+ * Collapse whitespace and strip any spaces that crept in between CJK characters
+ * due to PDF line-break artifacts (e.g. "後 果 ？" → "後果？").
  */
+function normalizeChinese(str) {
+  // First collapse all whitespace sequences to a single space
+  let s = str.replace(/\s+/g, ' ').trim();
+  // Remove spaces between any two characters where at least one side is CJK
+  // (covers spaces before/after punctuation like ？！，。、：；「」 too)
+  const CJK = '[\u4e00-\u9fff\u3000-\u303f\uff00-\uffef\u2014\u2026]';
+  const re = new RegExp(`(${CJK}) (?=${CJK})|(?<=${CJK}) (${CJK})`, 'gu');
+  // Iteratively apply until stable (handles multiple consecutive spaces)
+  let prev;
+  do {
+    prev = s;
+    s = s.replace(re, '$1$2');
+  } while (s !== prev);
+  return s;
+}
+
+
 function parseQuestions(text, chapterAnswers, globalIdStart) {
   const questions = [];
 
@@ -153,10 +171,9 @@ function parseQuestions(text, chapterAnswers, globalIdStart) {
     if (optionPositions.length < 2) continue; // Skip malformed
 
     // Question text is before first option
-    const questionText = cleaned
-      .substring(0, optionPositions[0].index)
-      .replace(/\s+/g, ' ')
-      .trim();
+    const questionText = normalizeChinese(
+      cleaned.substring(0, optionPositions[0].index),
+    );
 
     // Extract option texts
     const options = [];
@@ -166,12 +183,9 @@ function parseQuestions(text, chapterAnswers, globalIdStart) {
         i + 1 < optionPositions.length
           ? optionPositions[i + 1].index
           : cleaned.length;
-      const optText = cleaned
-        .substring(start, end)
-        .replace(/\s+/g, ' ')
-        .trim()
-        .replace(/。$/, '。')
-        .replace(/\.$/, '.');
+      const optText = normalizeChinese(
+        cleaned.substring(start, end).replace(/。$/, '。').replace(/\.$/, '.'),
+      );
       options.push(optText);
     }
 
