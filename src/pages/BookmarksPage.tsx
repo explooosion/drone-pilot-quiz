@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { Question, QuestionBankType } from '../types';
 import { useQuestions } from '../hooks/useQuestions';
-import { BANK_LABELS } from '../utils/exam-config';
 import { getStorageItem, setStorageItem, STORAGE_KEYS } from '../utils/storage';
 import { QuestionCard } from '../components/quiz/QuestionCard';
 
@@ -97,11 +96,6 @@ export function BookmarksPage() {
         <div className="flex flex-col gap-6">
           {filtered.map((item) => (
             <div key={`${item.bankType}-${item.question.id}`}>
-              <div className="mb-1 flex items-center gap-2">
-                <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-sm text-gray-500 dark:bg-gray-800 dark:text-gray-400">
-                  {BANK_LABELS[item.bankType]}
-                </span>
-              </div>
               <QuestionCard
                 question={item.question}
                 questionNumber={item.question.id}

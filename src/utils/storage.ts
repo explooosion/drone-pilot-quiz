@@ -8,6 +8,7 @@ export const STORAGE_KEYS = {
   examHistory: `${PREFIX}-exam-history`,
   prefExamAutoAdvance: `${PREFIX}-pref-exam-auto-advance`,
   prefPracticeShowAnswer: `${PREFIX}-pref-practice-show-answer`,
+  privacyConsent: `${PREFIX}-privacy-consent`,
 } as const;
 
 export function getStorageItem<T>(key: string, fallback: T): T {
@@ -21,6 +22,13 @@ export function getStorageItem<T>(key: string, fallback: T): T {
 
 export function setStorageItem<T>(key: string, value: T): void {
   try {
+    // Block writes (except the consent key itself) when user has not accepted
+    if (
+      key !== STORAGE_KEYS.privacyConsent &&
+      localStorage.getItem(STORAGE_KEYS.privacyConsent) !== 'true'
+    ) {
+      return;
+    }
     localStorage.setItem(key, JSON.stringify(value));
   } catch {
     // localStorage full or unavailable — silently ignore

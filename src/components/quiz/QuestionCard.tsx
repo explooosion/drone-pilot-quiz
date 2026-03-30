@@ -1,5 +1,5 @@
 import type { Question } from '../../types';
-import { HiOutlineStar, HiStar, HiCheck } from 'react-icons/hi';
+import { HiOutlineBookmark, HiBookmark, HiCheck } from 'react-icons/hi';
 import { OptionButton } from './OptionButton';
 
 const OPTION_LABELS = ['A', 'B', 'C', 'D'];
@@ -80,9 +80,9 @@ export function QuestionCard({
             aria-label={isBookmarked ? '取消收藏' : '收藏題目'}
           >
             {isBookmarked ? (
-              <HiStar className="text-warning-500 h-6 w-6" />
+              <HiBookmark className="text-primary-600 dark:text-primary-400 h-6 w-6" />
             ) : (
-              <HiOutlineStar className="h-6 w-6" />
+              <HiOutlineBookmark className="h-6 w-6" />
             )}
           </button>
         )}

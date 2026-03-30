@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   HiOutlineHome,
@@ -6,8 +7,10 @@ import {
   HiOutlineClipboardCheck,
   HiOutlineClock,
   HiOutlineBookmark,
+  HiOutlineShieldCheck,
 } from 'react-icons/hi';
 import { usePreferences } from '../../hooks/usePreferences';
+import { ConsentContext } from '../../contexts/ConsentContext';
 
 const menuLinks = [
   { to: '/', label: '首頁', icon: <HiOutlineHome className="size-5" /> },
@@ -54,6 +57,7 @@ interface MobileMenuProps {
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const { examAutoAdvance, setExamAutoAdvance, practiceShowAnswer, setPracticeShowAnswer } =
     usePreferences();
+  const { openConsentDialog } = React.use(ConsentContext);
 
   useEffect(() => {
     if (isOpen) {
@@ -83,7 +87,11 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div className="flex h-14 items-center justify-end border-b border-gray-200 px-4 dark:border-gray-800">
+        <div className="flex h-14 items-center justify-between border-b border-gray-200 px-4 dark:border-gray-800">
+          <div>
+            <p className="text-sm font-bold text-gray-900 dark:text-gray-100">無人機學科題庫</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500">遙控無人機操作證練習</p>
+          </div>
           <button
             type="button"
             aria-label="關閉選單"
@@ -124,6 +132,21 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             checked={practiceShowAnswer}
             onChange={setPracticeShowAnswer}
           />
+        </div>
+
+        {/* Privacy */}
+        <div className="border-t border-gray-200 px-1 pb-4 dark:border-gray-800">
+          <button
+            type="button"
+            onClick={() => {
+              onClose();
+              openConsentDialog();
+            }}
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
+          >
+            <HiOutlineShieldCheck className="size-5 shrink-0" />
+            隱私權政策
+          </button>
         </div>
       </nav>
     </>
