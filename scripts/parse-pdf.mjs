@@ -43,16 +43,21 @@ const BANKS = [
  * Extract update date from PDF text.
  * Looks for patterns like "最近更新日期：115/2/2" or header info.
  */
-function extractUpdateDate(text) {
+function extractUpdateDate(text, fileNameFallback = '') {
   // Try "最近更新日期：115/2/2 ~ 115/2/2"
   const match = text.match(/最近更新日期[：:]\s*([\d]+\/[\d]+\/[\d]+)/);
   if (match) {
     return match[1].replace(/\//g, '.');
   }
-  // Try extracting from filename-style date
+  // Try ROC date like "115年2月2日"
   const match2 = text.match(/(\d{3})年(\d{1,2})月(\d{1,2})日/);
   if (match2) {
     return `${match2[1]}.${match2[2]}.${match2[3]}`;
+  }
+  // Try filename pattern like "(1140528更新)" → 114.5.28
+  const match3 = fileNameFallback.match(/\((\d{3})(\d{2})(\d{2})更新\)/);
+  if (match3) {
+    return `${match3[1]}.${parseInt(match3[2], 10)}.${parseInt(match3[3], 10)}`;
   }
   return 'unknown';
 }
@@ -196,8 +201,8 @@ function parseQuestions(text, chapterAnswers, globalIdStart) {
 /**
  * Parse a full PDF text into structured question data.
  */
-function parsePdfText(text) {
-  const updateDate = extractUpdateDate(text);
+function parsePdfText(text, fileName = '') {
+  const updateDate = extractUpdateDate(text, fileName);
   const answerKeys = parseAnswerKeys(text);
 
   // Check if this PDF has chapters
@@ -327,12 +332,13 @@ function parsePdfFlat(text, updateDate) {
 }
 
 async function parsePdf(filePath) {
-  console.log(`\nParsing: ${path.basename(filePath)}`);
+  const fileName = path.basename(filePath);
+  console.log(`\nParsing: ${fileName}`);
   const buf = fs.readFileSync(filePath);
   const parser = new PDFParse({ data: buf });
   const result = await parser.getText();
   const text = result.text;
-  const parsed = parsePdfText(text);
+  const parsed = parsePdfText(text, fileName);
   await parser.destroy();
   return parsed;
 }

@@ -1,11 +1,18 @@
 import { HiOutlineExternalLink } from 'react-icons/hi';
+import metadata from '../../data/metadata.json';
+
+function formatDate(d: string) {
+  return d === 'unknown' ? '待更新' : d;
+}
 
 export function Footer() {
   return (
     <footer className="border-t border-gray-200 bg-white px-4 py-6 dark:border-gray-800 dark:bg-gray-900">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-2 text-center">
         <p className="text-xs text-gray-400 dark:text-gray-500">
-          題庫更新日期 — 學習類：待更新 ｜ 專業類：待更新 ｜ 換證類：待更新
+          題庫更新日期 — 學習類：{formatDate(metadata.basic.updateDate)} ｜ 專業類：
+          {formatDate(metadata.professional.updateDate)} ｜ 換證類：
+          {formatDate(metadata.renewal.updateDate)}
         </p>
 
         <div className="flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500">
