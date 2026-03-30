@@ -65,6 +65,20 @@ export function HomePage() {
           交通部民用航空局
         </a>
       </p>
+
+      {/* Disclaimer */}
+      <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+        線上題庫僅供參考，實際考試內容以
+        <a
+          href="https://www.caa.gov.tw"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline transition-colors hover:text-gray-600 dark:hover:text-gray-400"
+        >
+          交通部民用航空局
+        </a>
+        公告為準。
+      </p>
     </div>
   );
 }
