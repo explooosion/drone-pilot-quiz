@@ -20,28 +20,17 @@ export function HomePage() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center px-4 py-5 md:py-8">
-      {/* Icon area */}
-      <div className="mb-4">
-        <img
-          src="/logo-512.png"
-          alt=""
-          className="h-20 w-20 rounded-2xl"
-          aria-hidden="true"
-          draggable={false}
-        />
-      </div>
-
+    <div className="flex flex-1 flex-col items-center justify-center px-4 py-8">
       {/* Title */}
       <h1 className="text-2xl font-bold text-gray-900 md:text-3xl dark:text-gray-100">
-        無人機學科題庫
+        台灣遙控無人機操作證
       </h1>
       <p className="mt-2 text-center text-gray-500 dark:text-gray-400">
-        台灣遙控無人機操作證學科測驗練習
+        學科測驗題庫練習，一起通過考試吧！
       </p>
 
       {/* Mode cards */}
-      <div className="mt-6 grid w-full max-w-2xl grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="mt-8 grid w-full max-w-2xl grid-cols-1 gap-4 md:grid-cols-2">
         {modes.map((mode) => {
           const Icon = mode.icon;
           return (
@@ -61,27 +50,14 @@ export function HomePage() {
         })}
       </div>
 
-      {/* Source */}
-      <p className="mt-8 text-sm text-gray-400 dark:text-gray-500">
-        題庫來源：
-        <a
-          href="https://www.caa.gov.tw"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline hover:text-gray-500 dark:hover:text-gray-400"
-        >
-          交通部民用航空局
-        </a>
-      </p>
-
       {/* Disclaimer */}
-      <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+      <p className="mt-8 text-xs text-gray-400 dark:text-gray-500">
         線上題庫僅供參考，實際考試內容以
         <a
           href="https://www.caa.gov.tw"
           target="_blank"
           rel="noopener noreferrer"
-          className="underline transition-colors hover:text-gray-600 dark:hover:text-gray-400"
+          className="mx-1 underline transition-colors hover:text-gray-600 dark:hover:text-gray-400"
         >
           交通部民用航空局
         </a>

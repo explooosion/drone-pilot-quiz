@@ -22,7 +22,7 @@ export function Layout({ children }: LayoutProps) {
       <Header onMenuToggle={() => setIsMenuOpen((prev) => !prev)} />
       <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-[calc(3.5rem+env(safe-area-inset-top))] pb-8">
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 pt-[calc(3.5rem+env(safe-area-inset-top))] pb-8">
         {children}
       </main>
 
