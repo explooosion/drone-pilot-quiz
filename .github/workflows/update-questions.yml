@@ -24,6 +24,9 @@ jobs:
       - name: Download and parse question banks
         run: node scripts/update-questions.mjs
 
+      - name: Validate question banks
+        run: node scripts/check-data.mjs
+
       - name: Check for changes
         id: changes
         run: |

@@ -21,11 +21,22 @@ function checkBank(bank) {
   return issues;
 }
 
+let totalIssues = 0;
+
 for (const bank of [basic, professional, renewal]) {
   const issues = checkBank(bank);
-  console.log(`\n=== ${bank.label} === ${bank.questions.length} questions, ${issues.length} issues`);
+  const status = issues.length === 0 ? '✓' : '✗';
+  console.log(`${status} ${bank.label}: ${bank.questions.length} questions, ${issues.length} issues`);
   if (issues.length > 0) {
-    for (const i of issues.slice(0, 20)) console.log(' ', JSON.stringify(i));
-    if (issues.length > 20) console.log(`  ... and ${issues.length - 20} more`);
+    for (const i of issues.slice(0, 20)) console.error(' ', JSON.stringify(i));
+    if (issues.length > 20) console.error(`  ... and ${issues.length - 20} more`);
   }
+  totalIssues += issues.length;
 }
+
+if (totalIssues > 0) {
+  console.error(`\n✗ Validation failed: ${totalIssues} total issue(s) found across all banks.`);
+  process.exit(1);
+}
+
+console.log('\n✓ All banks passed validation.');
