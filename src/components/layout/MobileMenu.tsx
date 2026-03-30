@@ -7,6 +7,7 @@ import {
   HiOutlineClock,
   HiOutlineBookmark,
 } from 'react-icons/hi';
+import { usePreferences } from '../../hooks/usePreferences';
 
 const menuLinks = [
   { to: '/', label: '首頁', icon: <HiOutlineHome className="size-5" /> },
@@ -16,12 +17,44 @@ const menuLinks = [
   { to: '/bookmarks', label: '我的收藏', icon: <HiOutlineBookmark className="size-5" /> },
 ];
 
+interface PrefToggleProps {
+  label: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+}
+
+function PrefToggle({ label, checked, onChange }: PrefToggleProps) {
+  return (
+    <label className="flex cursor-pointer items-center justify-between gap-4 px-4 py-2.5">
+      <span className="text-sm text-gray-700 dark:text-gray-200">{label}</span>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        onClick={() => onChange(!checked)}
+        className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none ${
+          checked ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-700'
+        }`}
+      >
+        <span
+          className={`inline-block h-5 w-5 rounded-full bg-white shadow transition-transform ${
+            checked ? 'translate-x-5' : 'translate-x-0'
+          }`}
+        />
+      </button>
+    </label>
+  );
+}
+
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+  const { examAutoAdvance, setExamAutoAdvance, practiceShowAnswer, setPracticeShowAnswer } =
+    usePreferences();
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -75,6 +108,23 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             </li>
           ))}
         </ul>
+
+        {/* Preferences */}
+        <div className="border-t border-gray-200 px-1 pb-4 dark:border-gray-800">
+          <p className="px-4 py-2 text-xs font-semibold tracking-wide text-gray-400 uppercase dark:text-gray-500">
+            偏好設定
+          </p>
+          <PrefToggle
+            label="模擬考試自動跳下一題"
+            checked={examAutoAdvance}
+            onChange={setExamAutoAdvance}
+          />
+          <PrefToggle
+            label="題庫練習顯示答案"
+            checked={practiceShowAnswer}
+            onChange={setPracticeShowAnswer}
+          />
+        </div>
       </nav>
     </>
   );

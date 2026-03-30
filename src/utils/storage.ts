@@ -6,6 +6,8 @@ export const STORAGE_KEYS = {
   readQuestions: (type: string) => `${PREFIX}-read-${type}`,
   bookmarks: (type: string) => `${PREFIX}-bookmarks-${type}`,
   examHistory: `${PREFIX}-exam-history`,
+  prefExamAutoAdvance: `${PREFIX}-pref-exam-auto-advance`,
+  prefPracticeShowAnswer: `${PREFIX}-pref-practice-show-answer`,
 } as const;
 
 export function getStorageItem<T>(key: string, fallback: T): T {

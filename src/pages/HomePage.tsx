@@ -20,9 +20,9 @@ export function HomePage() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center px-4 py-10 md:py-16">
+    <div className="flex flex-col items-center px-4 py-5 md:py-8">
       {/* Icon area */}
-      <div className="mb-4 text-6xl">🛸</div>
+      <div className="mb-4 text-5xl">🛸</div>
 
       {/* Title */}
       <h1 className="text-2xl font-bold text-gray-900 md:text-3xl dark:text-gray-100">
@@ -33,7 +33,7 @@ export function HomePage() {
       </p>
 
       {/* Mode cards */}
-      <div className="mt-10 grid w-full max-w-2xl grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="mt-6 grid w-full max-w-2xl grid-cols-1 gap-4 md:grid-cols-2">
         {modes.map((mode) => {
           const Icon = mode.icon;
           return (
@@ -54,7 +54,7 @@ export function HomePage() {
       </div>
 
       {/* Source */}
-      <p className="mt-12 text-sm text-gray-400 dark:text-gray-500">
+      <p className="mt-8 text-sm text-gray-400 dark:text-gray-500">
         題庫來源：
         <a
           href="https://www.caa.gov.tw"

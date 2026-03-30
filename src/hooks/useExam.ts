@@ -120,6 +120,16 @@ export function useExam(type: QuestionBankType) {
     setCurrentIndex((i) => Math.max(i - 1, 0));
   }, []);
 
+  const abandonExam = useCallback(() => {
+    cleanup();
+    setIsStarted(false);
+    setIsFinished(false);
+    setQuestions([]);
+    setAnswers(new Map());
+    setCurrentIndex(0);
+    setTimeRemaining(config.timeLimitMinutes * 60);
+  }, [cleanup, config.timeLimitMinutes]);
+
   return {
     questions,
     answers,
@@ -133,5 +143,6 @@ export function useExam(type: QuestionBankType) {
     nextQuestion,
     prevQuestion,
     submitExam,
+    abandonExam,
   };
 }

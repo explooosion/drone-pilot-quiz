@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate, useParams, useBlocker } from 'react-router-dom';
 import type { QuestionBankType } from '../types';
 import { useExam } from '../hooks/useExam';
 import { useSwipe } from '../hooks/useSwipe';
+import { usePreferences } from '../hooks/usePreferences';
 import { EXAM_CONFIGS, BANK_LABELS } from '../utils/exam-config';
 import { QuestionCard } from '../components/quiz/QuestionCard';
 import { ProgressBar } from '../components/quiz/ProgressBar';
@@ -29,9 +30,15 @@ export function ExamPage() {
     nextQuestion,
     prevQuestion,
     submitExam,
+    abandonExam,
   } = useExam(bankType);
 
+  const { examAutoAdvance } = usePreferences();
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
+  const [showAbandonDialog, setShowAbandonDialog] = useState(false);
+  const autoAdvanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const blocker = useBlocker(isStarted && !isFinished);
 
   const swipeHandlers = useSwipe(nextQuestion, prevQuestion);
 
@@ -99,6 +106,35 @@ export function ExamPage() {
     navigate(`/exam/${bankType}/result`, { state: record, replace: true });
   }, [submitExam, navigate, bankType]);
 
+  const handleSelectAnswer = useCallback(
+    (questionId: number, idx: number) => {
+      selectAnswer(questionId, idx);
+      if (examAutoAdvance && currentIndex < questions.length - 1) {
+        if (autoAdvanceTimerRef.current) clearTimeout(autoAdvanceTimerRef.current);
+        autoAdvanceTimerRef.current = setTimeout(() => {
+          autoAdvanceTimerRef.current = null;
+          nextQuestion();
+        }, 400);
+      }
+    },
+    [selectAnswer, examAutoAdvance, currentIndex, questions.length, nextQuestion],
+  );
+
+  // Cancel pending auto-advance when user manually changes question
+  useEffect(() => {
+    if (autoAdvanceTimerRef.current) {
+      clearTimeout(autoAdvanceTimerRef.current);
+      autoAdvanceTimerRef.current = null;
+    }
+  }, [currentIndex]);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (autoAdvanceTimerRef.current) clearTimeout(autoAdvanceTimerRef.current);
+    };
+  }, []);
+
   // Pre-exam info card
   if (!isStarted) {
     return (
@@ -148,11 +184,20 @@ export function ExamPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-4 pb-[calc(5rem+env(safe-area-inset-bottom))]">
       {/* Timer + progress */}
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between gap-2">
         <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
           {BANK_LABELS[bankType]}
         </h2>
-        <Timer timeRemaining={timeRemaining} />
+        <div className="flex shrink-0 items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setShowAbandonDialog(true)}
+            className="text-sm text-gray-400 transition-colors hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400"
+          >
+            放棄
+          </button>
+          <Timer timeRemaining={timeRemaining} />
+        </div>
       </div>
 
       <ProgressBar
@@ -169,7 +214,7 @@ export function ExamPage() {
           totalQuestions={questions.length}
           mode="exam"
           selectedAnswer={answers.get(question.id)}
-          onSelectAnswer={(idx) => selectAnswer(question.id, idx)}
+          onSelectAnswer={(idx) => handleSelectAnswer(question.id, idx)}
         />
       </div>
 
@@ -198,6 +243,37 @@ export function ExamPage() {
         cancelText="繼續作答"
         onConfirm={confirmSubmit}
         onCancel={() => setShowSubmitDialog(false)}
+      />
+
+      {/* Abandon exam */}
+      <AlertDialog
+        isOpen={showAbandonDialog}
+        title="放棄考試？"
+        message="確定要放棄此次考試嗎？成績不會被記錄。"
+        confirmText="放棄考試"
+        cancelText="繼續作答"
+        variant="danger"
+        onConfirm={() => {
+          setShowAbandonDialog(false);
+          abandonExam();
+          navigate('/');
+        }}
+        onCancel={() => setShowAbandonDialog(false)}
+      />
+
+      {/* Navigation blocker (back button / link click) */}
+      <AlertDialog
+        isOpen={blocker.state === 'blocked'}
+        title="離開考試？"
+        message="離開頁面將中止此次考試，成績不會被記錄。"
+        confirmText="離開"
+        cancelText="繼續作答"
+        variant="danger"
+        onConfirm={() => {
+          abandonExam();
+          blocker.proceed?.();
+        }}
+        onCancel={() => blocker.reset?.()}
       />
     </div>
   );

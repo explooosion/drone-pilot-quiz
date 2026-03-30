@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import type { QuestionBankType } from '../types';
 import { useQuestions } from '../hooks/useQuestions';
 import { useProgress } from '../hooks/useProgress';
 import { useSwipe } from '../hooks/useSwipe';
+import { usePreferences } from '../hooks/usePreferences';
 import { BANK_LABELS } from '../utils/exam-config';
 import { getStorageItem, setStorageItem, STORAGE_KEYS } from '../utils/storage';
 import { QuestionCard } from '../components/quiz/QuestionCard';
@@ -19,12 +20,24 @@ export function PracticePage() {
   const { currentIndex, setCurrentIndex, readIds, markAsRead, resetProgress } =
     useProgress(bankType);
 
+  const { practiceShowAnswer } = usePreferences();
+
   const [bookmarks, setBookmarks] = useState<number[]>(() =>
     getStorageItem<number[]>(STORAGE_KEYS.bookmarks(bankType), []),
   );
   const [showResumeDialog, setShowResumeDialog] = useState(
     () => getStorageItem(STORAGE_KEYS.practiceProgress(bankType), 0) > 0,
   );
+
+  // Per-question reveal answers (used when practiceShowAnswer=false)
+  const [revealAnswers, setRevealAnswers] = useState<Map<number, number>>(new Map());
+  const autoAdvanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (autoAdvanceTimerRef.current) clearTimeout(autoAdvanceTimerRef.current);
+    };
+  }, []);
 
   // Mark current question as read
   useEffect(() => {
@@ -42,6 +55,22 @@ export function PracticePage() {
     });
   }, [currentIndex, questions, bankType]);
 
+  const handleRevealAnswer = useCallback(
+    (idx: number) => {
+      const q = questions[currentIndex];
+      if (!q || revealAnswers.has(q.id)) return;
+      setRevealAnswers((prev) => new Map(prev).set(q.id, idx));
+      if (idx === q.answer) {
+        if (autoAdvanceTimerRef.current) clearTimeout(autoAdvanceTimerRef.current);
+        autoAdvanceTimerRef.current = setTimeout(() => {
+          autoAdvanceTimerRef.current = null;
+          setCurrentIndex(Math.min(currentIndex + 1, questions.length - 1));
+        }, 400);
+      }
+    },
+    [questions, currentIndex, revealAnswers, setCurrentIndex],
+  );
+
   const swipeHandlers = useSwipe(
     () => setCurrentIndex(Math.min(currentIndex + 1, questions.length - 1)),
     () => setCurrentIndex(Math.max(currentIndex - 1, 0)),
@@ -58,26 +87,37 @@ export function PracticePage() {
   const question = questions[currentIndex];
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-6 pb-[calc(5rem+env(safe-area-inset-bottom))]">
-      {/* Header */}
-      <h1 className="mb-4 text-lg font-bold text-gray-900 dark:text-gray-100">
-        {BANK_LABELS[bankType]}
-      </h1>
-
-      <ProgressBar current={currentIndex + 1} total={questions.length} />
+    <div className="mx-auto max-w-2xl px-4 py-4 pb-[calc(5rem+env(safe-area-inset-bottom))]">
+      {/* Compact title + progress bar on one line */}
+      <ProgressBar
+        compact
+        title={BANK_LABELS[bankType]}
+        current={currentIndex + 1}
+        total={questions.length}
+      />
 
       {/* Card — swipe left = next, swipe right = prev */}
-      <div className="mt-6 touch-pan-y select-none" {...swipeHandlers}>
+      <div className="mt-4 touch-pan-y select-none" {...swipeHandlers}>
         <QuestionCard
           question={question}
           questionNumber={currentIndex + 1}
           totalQuestions={questions.length}
           mode="practice"
+          showAnswer={practiceShowAnswer}
           isBookmarked={bookmarks.includes(question.id)}
           onToggleBookmark={toggleBookmark}
           isRead={readIds.has(question.id)}
+          selectedAnswer={!practiceShowAnswer ? revealAnswers.get(question.id) : undefined}
+          onSelectAnswer={!practiceShowAnswer ? handleRevealAnswer : undefined}
         />
       </div>
+
+      {/* Swipe hint */}
+      <p className="mt-3 text-center text-sm text-gray-400 dark:text-gray-500">
+        ← 左右滑動切換題目 →
+      </p>
+
+      {/* Nav */}
 
       {/* Nav */}
       <QuestionNav

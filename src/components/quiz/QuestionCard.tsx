@@ -14,16 +14,24 @@ interface QuestionCardProps {
   isBookmarked?: boolean;
   onToggleBookmark?: () => void;
   isRead?: boolean;
+  /** practice mode: show correct answer immediately (default true) */
+  showAnswer?: boolean;
 }
 
 function getOptionState(
   mode: QuestionCardProps['mode'],
   index: number,
   correctAnswer: number,
-  selectedAnswer?: number,
+  selectedAnswer: number | undefined,
+  showAnswer: boolean,
 ): 'default' | 'selected' | 'correct' | 'wrong' {
   if (mode === 'practice') {
-    return index === correctAnswer ? 'correct' : 'default';
+    if (showAnswer) return index === correctAnswer ? 'correct' : 'default';
+    // reveal mode: only highlight after answered
+    if (selectedAnswer === undefined) return 'default';
+    if (index === correctAnswer) return 'correct';
+    if (index === selectedAnswer && selectedAnswer !== correctAnswer) return 'wrong';
+    return 'default';
   }
   if (mode === 'exam') {
     return index === selectedAnswer ? 'selected' : 'default';
@@ -44,8 +52,10 @@ export function QuestionCard({
   isBookmarked,
   onToggleBookmark,
   isRead,
+  showAnswer = true,
 }: QuestionCardProps) {
-  const interactive = mode === 'exam';
+  const interactive =
+    mode === 'exam' || (mode === 'practice' && !showAnswer && selectedAnswer === undefined);
 
   return (
     <div className="mx-auto max-w-2xl rounded-xl bg-white p-5 shadow-sm md:p-8 dark:bg-gray-900">
@@ -90,7 +100,7 @@ export function QuestionCard({
             key={i}
             label={OPTION_LABELS[i]}
             text={opt}
-            state={getOptionState(mode, i, question.answer, selectedAnswer)}
+            state={getOptionState(mode, i, question.answer, selectedAnswer, showAnswer)}
             disabled={!interactive}
             onClick={interactive ? () => onSelectAnswer?.(i) : undefined}
           />
