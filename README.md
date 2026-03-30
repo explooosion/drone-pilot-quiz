@@ -2,7 +2,7 @@
 
 台灣遙控無人機（普通／專業）操作證學科測驗題庫練習與模擬考試。
 
-**線上使用：[https://robby570.tw/drone-pilot-quiz/](https://robby570.tw/drone-pilot-quiz/)**
+**線上使用：[https://drone-quiz.tw/](https://drone-quiz.tw/)**
 
 題庫來源：[交通部民用航空局](https://www.caa.gov.tw/Article.aspx?a=3833&lang=1)
 
