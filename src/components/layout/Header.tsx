@@ -16,7 +16,11 @@ export function Header({ onMenuToggle }: HeaderProps) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-gray-200 bg-white pt-[env(safe-area-inset-top)] dark:border-gray-800 dark:bg-gray-900">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-        <Link to="/" className="text-primary-800 dark:text-primary-300 text-lg font-bold">
+        <Link
+          to="/"
+          className="text-primary-800 dark:text-primary-300 flex items-center gap-2 text-lg font-bold"
+        >
+          <img src="/logo-512.png" alt="" className="h-8 w-8 rounded-lg" aria-hidden="true" />
           無人機學科題庫
         </Link>
 

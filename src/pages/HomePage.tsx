@@ -22,7 +22,15 @@ export function HomePage() {
   return (
     <div className="flex flex-col items-center px-4 py-5 md:py-8">
       {/* Icon area */}
-      <div className="mb-4 text-5xl">🛸</div>
+      <div className="mb-4">
+        <img
+          src="/logo-512.png"
+          alt=""
+          className="h-20 w-20 rounded-2xl"
+          aria-hidden="true"
+          draggable={false}
+        />
+      </div>
 
       {/* Title */}
       <h1 className="text-2xl font-bold text-gray-900 md:text-3xl dark:text-gray-100">
