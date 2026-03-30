@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate, useParams, useBlocker } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import type { QuestionBankType } from '../types';
 import { useExam } from '../hooks/useExam';
 import { useSwipe } from '../hooks/useSwipe';
@@ -37,8 +37,6 @@ export function ExamPage() {
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const [showAbandonDialog, setShowAbandonDialog] = useState(false);
   const autoAdvanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const blocker = useBlocker(isStarted && !isFinished);
 
   const swipeHandlers = useSwipe(nextQuestion, prevQuestion);
 
@@ -259,21 +257,6 @@ export function ExamPage() {
           navigate('/');
         }}
         onCancel={() => setShowAbandonDialog(false)}
-      />
-
-      {/* Navigation blocker (back button / link click) */}
-      <AlertDialog
-        isOpen={blocker.state === 'blocked'}
-        title="離開考試？"
-        message="離開頁面將中止此次考試，成績不會被記錄。"
-        confirmText="離開"
-        cancelText="繼續作答"
-        variant="danger"
-        onConfirm={() => {
-          abandonExam();
-          blocker.proceed?.();
-        }}
-        onCancel={() => blocker.reset?.()}
       />
     </div>
   );
