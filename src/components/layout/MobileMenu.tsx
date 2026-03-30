@@ -72,7 +72,7 @@ function PreferencesDialog({
     <div className="fixed inset-0 z-[200] flex items-end justify-center p-4 sm:items-center">
       <div className="absolute inset-0 bg-black/60" onClick={onClose} aria-hidden="true" />
       <div className="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-900">
-        <h2 className="mb-5 text-lg font-bold text-gray-900 dark:text-gray-100">小偵設定</h2>
+        <h2 className="mb-5 text-lg font-bold text-gray-900 dark:text-gray-100">偏好設定</h2>
         <div className="flex flex-col gap-5">
           <PrefToggle
             label="模擬考試自動跳下一題"
@@ -174,7 +174,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
           >
             <HiOutlineAdjustments className="size-5 shrink-0" />
-            小偵設定
+            偏好設定
           </button>
         </div>
 
