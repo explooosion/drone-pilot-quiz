@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -8,6 +8,7 @@ import {
   HiOutlineClock,
   HiOutlineBookmark,
   HiOutlineShieldCheck,
+  HiOutlineAdjustments,
 } from 'react-icons/hi';
 import { usePreferences } from '../../hooks/usePreferences';
 import { ConsentContext } from '../../contexts/ConsentContext';
@@ -28,7 +29,7 @@ interface PrefToggleProps {
 
 function PrefToggle({ label, checked, onChange }: PrefToggleProps) {
   return (
-    <label className="flex cursor-pointer items-center justify-between gap-4 px-4 py-2.5">
+    <label className="flex cursor-pointer items-center justify-between gap-4">
       <span className="text-sm text-gray-700 dark:text-gray-200">{label}</span>
       <button
         type="button"
@@ -49,6 +50,53 @@ function PrefToggle({ label, checked, onChange }: PrefToggleProps) {
   );
 }
 
+interface PreferencesDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  examAutoAdvance: boolean;
+  setExamAutoAdvance: (v: boolean) => void;
+  practiceShowAnswer: boolean;
+  setPracticeShowAnswer: (v: boolean) => void;
+}
+
+function PreferencesDialog({
+  isOpen,
+  onClose,
+  examAutoAdvance,
+  setExamAutoAdvance,
+  practiceShowAnswer,
+  setPracticeShowAnswer,
+}: PreferencesDialogProps) {
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 z-[200] flex items-end justify-center p-4 sm:items-center">
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} aria-hidden="true" />
+      <div className="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-900">
+        <h2 className="mb-5 text-lg font-bold text-gray-900 dark:text-gray-100">小偵設定</h2>
+        <div className="flex flex-col gap-5">
+          <PrefToggle
+            label="模擬考試自動跳下一題"
+            checked={examAutoAdvance}
+            onChange={setExamAutoAdvance}
+          />
+          <PrefToggle
+            label="題庫練習顯示答案"
+            checked={practiceShowAnswer}
+            onChange={setPracticeShowAnswer}
+          />
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="bg-primary-700 hover:bg-primary-800 mt-6 w-full cursor-pointer rounded-lg px-5 py-2.5 text-sm font-semibold text-white transition-colors"
+        >
+          完成
+        </button>
+      </div>
+    </div>
+  );
+}
+
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
@@ -58,6 +106,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const { examAutoAdvance, setExamAutoAdvance, practiceShowAnswer, setPracticeShowAnswer } =
     usePreferences();
   const { openConsentDialog } = React.use(ConsentContext);
+  const [showPrefDialog, setShowPrefDialog] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -118,20 +167,15 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </ul>
 
         {/* Preferences */}
-        <div className="border-t border-gray-200 px-1 pb-4 dark:border-gray-800">
-          <p className="px-4 py-2 text-xs font-semibold tracking-wide text-gray-400 uppercase dark:text-gray-500">
-            偏好設定
-          </p>
-          <PrefToggle
-            label="模擬考試自動跳下一題"
-            checked={examAutoAdvance}
-            onChange={setExamAutoAdvance}
-          />
-          <PrefToggle
-            label="題庫練習顯示答案"
-            checked={practiceShowAnswer}
-            onChange={setPracticeShowAnswer}
-          />
+        <div className="border-t border-gray-200 px-1 dark:border-gray-800">
+          <button
+            type="button"
+            onClick={() => setShowPrefDialog(true)}
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
+          >
+            <HiOutlineAdjustments className="size-5 shrink-0" />
+            小偵設定
+          </button>
         </div>
 
         {/* Privacy */}
@@ -149,6 +193,15 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           </button>
         </div>
       </nav>
+
+      <PreferencesDialog
+        isOpen={showPrefDialog}
+        onClose={() => setShowPrefDialog(false)}
+        examAutoAdvance={examAutoAdvance}
+        setExamAutoAdvance={setExamAutoAdvance}
+        practiceShowAnswer={practiceShowAnswer}
+        setPracticeShowAnswer={setPracticeShowAnswer}
+      />
     </>
   );
 }

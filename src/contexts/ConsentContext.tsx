@@ -46,7 +46,7 @@ function ConsentDialog({ isOpen, onAccept, onDecline }: ConsentDialogProps) {
       <div className="absolute inset-0 bg-black/60" />
       <div className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-900">
         <h2 className="mb-1 text-lg font-bold text-gray-900 dark:text-gray-100">隱私權政策</h2>
-        <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">最後更新：2025 年 1 月</p>
+        <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">最後更新：2026 年 3 月</p>
 
         <p className="mb-3 text-sm text-gray-700 dark:text-gray-300">
           本網站（無人機學科題庫）為純客戶端學習工具，不設後端伺服器、不蒐集個人資料，亦不與第三方共享任何資訊。
