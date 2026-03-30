@@ -143,7 +143,7 @@ export function ExamPage() {
   if (!question) return null;
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-4 pb-24">
+    <div className="mx-auto max-w-2xl px-4 py-4 pb-[calc(5rem+env(safe-area-inset-bottom))]">
       {/* Timer + progress */}
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">

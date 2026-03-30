@@ -25,7 +25,7 @@ export function QuestionNav({
   const isLast = currentIndex === totalQuestions - 1;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-30 border-t border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
+    <div className="fixed inset-x-0 bottom-0 z-30 border-t border-gray-200 bg-white pb-[env(safe-area-inset-bottom)] dark:border-gray-700 dark:bg-gray-900">
       <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-3">
         {/* Prev */}
         <button

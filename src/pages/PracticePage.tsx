@@ -52,7 +52,7 @@ export function PracticePage() {
   const question = questions[currentIndex];
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-6 pb-24">
+    <div className="mx-auto max-w-2xl px-4 py-6 pb-[calc(5rem+env(safe-area-inset-bottom))]">
       {/* Header */}
       <h1 className="mb-4 text-lg font-bold text-gray-900 dark:text-gray-100">
         {BANK_LABELS[bankType]}
