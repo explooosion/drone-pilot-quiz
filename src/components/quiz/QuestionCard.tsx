@@ -1,5 +1,6 @@
 import type { Question } from '../../types';
-import { HiOutlineBookmark, HiBookmark, HiCheck } from 'react-icons/hi';
+import { HiCheck } from 'react-icons/hi';
+import { HiBookmark, HiOutlineBookmark } from 'react-icons/hi2';
 import { OptionButton } from './OptionButton';
 
 const OPTION_LABELS = ['A', 'B', 'C', 'D'];
