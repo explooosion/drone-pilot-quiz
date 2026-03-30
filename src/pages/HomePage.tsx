@@ -54,7 +54,7 @@ export function HomePage() {
       </div>
 
       {/* Source */}
-      <p className="mt-12 text-xs text-gray-400 dark:text-gray-500">
+      <p className="mt-12 text-sm text-gray-400 dark:text-gray-500">
         題庫來源：
         <a
           href="https://www.caa.gov.tw"

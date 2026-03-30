@@ -71,7 +71,7 @@ export function ExamHistoryPage() {
                   {BANK_LABELS[record.type]}
                 </span>
                 <span
-                  className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
+                  className={`rounded-full px-2 py-0.5 text-sm font-semibold ${
                     record.passed
                       ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
                       : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'

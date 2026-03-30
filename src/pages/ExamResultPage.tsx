@@ -55,7 +55,7 @@ export function ExamResultPage() {
             <span className="text-3xl font-bold text-gray-900 dark:text-gray-100">
               {record.score}
             </span>
-            <span className="text-xs text-gray-500 dark:text-gray-400">分</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">分</span>
           </div>
         </div>
 
@@ -145,7 +145,7 @@ function StatCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl bg-white p-4 text-center shadow-sm dark:bg-gray-900">
       <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{value}</p>
-      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{label}</p>
+      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{label}</p>
     </div>
   );
 }

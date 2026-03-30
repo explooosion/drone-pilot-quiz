@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { QuestionBankType } from '../types';
 import { useExam } from '../hooks/useExam';
+import { useSwipe } from '../hooks/useSwipe';
 import { EXAM_CONFIGS, BANK_LABELS } from '../utils/exam-config';
 import { QuestionCard } from '../components/quiz/QuestionCard';
 import { ProgressBar } from '../components/quiz/ProgressBar';
@@ -31,6 +32,8 @@ export function ExamPage() {
   } = useExam(bankType);
 
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
+
+  const swipeHandlers = useSwipe(nextQuestion, prevQuestion);
 
   const answeredCount = answers.size;
   const unansweredCount = questions.length - answeredCount;
@@ -158,8 +161,8 @@ export function ExamPage() {
         answeredCount={answeredCount}
       />
 
-      {/* Question */}
-      <div className="mt-6">
+      {/* Question — swipe left = next, swipe right = prev */}
+      <div className="mt-6 touch-pan-y select-none" {...swipeHandlers}>
         <QuestionCard
           question={question}
           questionNumber={currentIndex + 1}

@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import type { QuestionBankType } from '../types';
 import { useQuestions } from '../hooks/useQuestions';
 import { useProgress } from '../hooks/useProgress';
+import { useSwipe } from '../hooks/useSwipe';
 import { BANK_LABELS } from '../utils/exam-config';
 import { getStorageItem, setStorageItem, STORAGE_KEYS } from '../utils/storage';
 import { QuestionCard } from '../components/quiz/QuestionCard';
@@ -41,6 +42,11 @@ export function PracticePage() {
     });
   }, [currentIndex, questions, bankType]);
 
+  const swipeHandlers = useSwipe(
+    () => setCurrentIndex(Math.min(currentIndex + 1, questions.length - 1)),
+    () => setCurrentIndex(Math.max(currentIndex - 1, 0)),
+  );
+
   if (loading || questions.length === 0) {
     return (
       <div className="flex items-center justify-center py-24 text-gray-500 dark:text-gray-400">
@@ -60,8 +66,8 @@ export function PracticePage() {
 
       <ProgressBar current={currentIndex + 1} total={questions.length} />
 
-      {/* Card */}
-      <div className="mt-6">
+      {/* Card — swipe left = next, swipe right = prev */}
+      <div className="mt-6 touch-pan-y select-none" {...swipeHandlers}>
         <QuestionCard
           question={question}
           questionNumber={currentIndex + 1}

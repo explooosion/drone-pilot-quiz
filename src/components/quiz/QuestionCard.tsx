@@ -56,7 +56,7 @@ export function QuestionCard({
             第 {questionNumber} / {totalQuestions} 題
           </span>
           {mode === 'practice' && isRead && (
-            <span className="inline-flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
+            <span className="inline-flex items-center gap-1 text-sm text-gray-400 dark:text-gray-500">
               <HiCheck className="h-3.5 w-3.5" />
               已讀
             </span>

@@ -43,7 +43,7 @@ export function CategorySelectPage() {
                 </span>
               )}
               {isExam && (
-                <span className="text-xs text-gray-400 dark:text-gray-500">
+                <span className="text-sm text-gray-400 dark:text-gray-500">
                   及格分數 {config.passScore} 分
                 </span>
               )}

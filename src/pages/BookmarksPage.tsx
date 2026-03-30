@@ -98,7 +98,7 @@ export function BookmarksPage() {
           {filtered.map((item) => (
             <div key={`${item.bankType}-${item.question.id}`}>
               <div className="mb-1 flex items-center gap-2">
-                <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-500 dark:bg-gray-800 dark:text-gray-400">
+                <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-sm text-gray-500 dark:bg-gray-800 dark:text-gray-400">
                   {BANK_LABELS[item.bankType]}
                 </span>
               </div>
