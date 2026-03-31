@@ -8,7 +8,7 @@ export function usePreferences() {
   );
   const [practiceShowAnswer, setPracticeShowAnswer] = useLocalStorage(
     STORAGE_KEYS.prefPracticeShowAnswer,
-    true,
+    false,
   );
   return { examAutoAdvance, setExamAutoAdvance, practiceShowAnswer, setPracticeShowAnswer };
 }

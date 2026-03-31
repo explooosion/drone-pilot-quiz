@@ -1,5 +1,4 @@
 import type { Question } from '../../types';
-import { HiCheck } from 'react-icons/hi';
 import { HiBookmark, HiOutlineBookmark } from 'react-icons/hi2';
 import { OptionButton } from './OptionButton';
 
@@ -7,14 +6,14 @@ const OPTION_LABELS = ['A', 'B', 'C', 'D'];
 
 interface QuestionCardProps {
   question: Question;
-  questionNumber: number;
-  totalQuestions: number;
+  questionNumber?: number;
+  totalQuestions?: number;
+  progressLabel?: string;
   mode: 'practice' | 'exam' | 'review';
   selectedAnswer?: number;
   onSelectAnswer?: (index: number) => void;
   isBookmarked?: boolean;
   onToggleBookmark?: () => void;
-  isRead?: boolean;
   /** practice mode: show correct answer immediately (default true) */
   showAnswer?: boolean;
 }
@@ -47,12 +46,12 @@ export function QuestionCard({
   question,
   questionNumber,
   totalQuestions,
+  progressLabel,
   mode,
   selectedAnswer,
   onSelectAnswer,
   isBookmarked,
   onToggleBookmark,
-  isRead,
   showAnswer = true,
 }: QuestionCardProps) {
   const interactive =
@@ -64,14 +63,8 @@ export function QuestionCard({
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="bg-primary-50 dark:bg-primary-950 text-primary-600 dark:text-primary-400 inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold">
-            第 {questionNumber} / {totalQuestions} 題
+            {progressLabel ?? `第 ${questionNumber ?? 0} / ${totalQuestions ?? 0} 題`}
           </span>
-          {mode === 'practice' && isRead && (
-            <span className="inline-flex items-center gap-1 text-sm text-gray-400 dark:text-gray-500">
-              <HiCheck className="h-3.5 w-3.5" />
-              已讀
-            </span>
-          )}
         </div>
         {onToggleBookmark && (
           <button

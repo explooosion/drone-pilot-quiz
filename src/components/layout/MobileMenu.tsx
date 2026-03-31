@@ -1,24 +1,45 @@
 import { useEffect, useState } from 'react';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
-  HiOutlineHome,
   HiOutlineBookOpen,
   HiOutlineClipboardCheck,
-  HiOutlineClock,
   HiOutlineBookmark,
+  HiOutlineClock,
+  HiOutlineHome,
   HiOutlineShieldCheck,
   HiOutlineAdjustments,
+  HiOutlineExternalLink,
 } from 'react-icons/hi';
 import { usePreferences } from '../../hooks/usePreferences';
 import { ConsentContext } from '../../contexts/ConsentContext';
 
 const menuLinks = [
-  { to: '/', label: '首頁', icon: <HiOutlineHome className="size-5" /> },
-  { to: '/practice/select', label: '練習模式', icon: <HiOutlineBookOpen className="size-5" /> },
-  { to: '/exam/select', label: '模擬測驗', icon: <HiOutlineClipboardCheck className="size-5" /> },
-  { to: '/history', label: '考試紀錄', icon: <HiOutlineClock className="size-5" /> },
-  { to: '/bookmarks', label: '我的收藏', icon: <HiOutlineBookmark className="size-5" /> },
+  { to: '/', label: '首頁', section: '', icon: <HiOutlineHome className="size-5" /> },
+  {
+    to: '/practice/select',
+    label: '題庫練習',
+    section: 'practice',
+    icon: <HiOutlineBookOpen className="size-5" />,
+  },
+  {
+    to: '/exam/select',
+    label: '模擬測驗',
+    section: 'exam',
+    icon: <HiOutlineClipboardCheck className="size-5" />,
+  },
+  {
+    to: '/bookmarks',
+    label: '我的收藏',
+    section: 'bookmarks',
+    icon: <HiOutlineBookmark className="size-5" />,
+  },
+  {
+    to: '/history',
+    label: '考試紀錄',
+    section: 'history',
+    icon: <HiOutlineClock className="size-5" />,
+  },
 ];
 
 interface PrefToggleProps {
@@ -69,7 +90,7 @@ function PreferencesDialog({
 }: PreferencesDialogProps) {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-[200] flex items-end justify-center p-4 sm:items-center">
+    <div className="fixed inset-0 z-200 flex items-end justify-center p-4 sm:items-center">
       <div className="absolute inset-0 bg-black/60" onClick={onClose} aria-hidden="true" />
       <div className="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-900">
         <h2 className="mb-5 text-lg font-bold text-gray-900 dark:text-gray-100">偏好設定</h2>
@@ -106,7 +127,9 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const { examAutoAdvance, setExamAutoAdvance, practiceShowAnswer, setPracticeShowAnswer } =
     usePreferences();
   const { openConsentDialog } = React.use(ConsentContext);
+  const { pathname } = useLocation();
   const [showPrefDialog, setShowPrefDialog] = useState(false);
+  const currentSection = pathname.split('/')[1] ?? '';
 
   useEffect(() => {
     if (isOpen) {
@@ -152,12 +175,16 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </div>
 
         <ul className="flex flex-col gap-1 p-3">
-          {menuLinks.map(({ to, label, icon }) => (
+          {menuLinks.map(({ to, label, section, icon }) => (
             <li key={to}>
               <Link
                 to={to}
                 onClick={onClose}
-                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
+                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
+                  currentSection === section
+                    ? 'bg-primary-50 text-primary-700 hover:bg-primary-100 dark:bg-primary-950/40 dark:text-primary-300 dark:hover:bg-primary-900/50'
+                    : 'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800'
+                }`}
               >
                 {icon}
                 {label}
@@ -180,6 +207,17 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
         {/* Privacy */}
         <div className="border-t border-gray-200 px-1 pb-4 dark:border-gray-800">
+          <a
+            href="https://github.com/explooosion/drone-pilot-quiz/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={onClose}
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
+          >
+            <HiOutlineExternalLink className="size-5 shrink-0" />
+            問題回報
+          </a>
+
           <button
             type="button"
             onClick={() => {

@@ -2,17 +2,24 @@ import { useCallback, useMemo, useState } from 'react';
 import type { Question, QuestionBankType } from '../types';
 import { useQuestions } from '../hooks/useQuestions';
 import { getStorageItem, setStorageItem, STORAGE_KEYS } from '../utils/storage';
+import { HiOutlineFilter } from 'react-icons/hi';
 import { QuestionCard } from '../components/quiz/QuestionCard';
 
 const bankTypes: QuestionBankType[] = ['basic', 'professional', 'renewal'];
 type FilterType = 'all' | QuestionBankType;
 
-const filterTabs: { key: FilterType; label: string }[] = [
-  { key: 'all', label: '全部' },
+const filterOptions: { key: FilterType; label: string }[] = [
+  { key: 'all', label: '全部題庫' },
   { key: 'basic', label: '普通操作證' },
   { key: 'professional', label: '專業操作證' },
   { key: 'renewal', label: '屆期換證' },
 ];
+
+const bankTypeLabels: Record<QuestionBankType, string> = {
+  basic: '普通操作證',
+  professional: '專業操作證',
+  renewal: '屆期換證',
+};
 
 interface BookmarkedQuestion {
   question: Question;
@@ -67,24 +74,33 @@ export function BookmarksPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 md:py-12">
-      <h1 className="mb-6 text-2xl font-bold text-gray-900 dark:text-gray-100">收藏題目</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">收藏題目</h1>
 
-      {/* Filter tabs */}
-      <div className="mb-6 flex gap-2 overflow-x-auto pb-2">
-        {filterTabs.map((tab) => (
-          <button
-            key={tab.key}
-            type="button"
-            onClick={() => setFilter(tab.key)}
-            className={`cursor-pointer rounded-full px-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors ${
-              filter === tab.key
-                ? 'bg-primary-700 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
-            }`}
+        {/* Filter select */}
+        <div className="relative">
+          <HiOutlineFilter className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-gray-400" />
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value as FilterType)}
+            className="focus:border-primary-500 focus:ring-primary-500 cursor-pointer appearance-none rounded-lg border border-gray-200 bg-white py-2 pr-8 pl-9 text-sm font-medium text-gray-700 transition-colors hover:border-gray-300 focus:ring-1 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-600"
           >
-            {tab.label}
-          </button>
-        ))}
+            {filterOptions.map((opt) => (
+              <option key={opt.key} value={opt.key}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+          <svg
+            className="pointer-events-none absolute top-1/2 right-2.5 size-4 -translate-y-1/2 text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
       </div>
 
       {/* Content */}
@@ -98,8 +114,7 @@ export function BookmarksPage() {
             <div key={`${item.bankType}-${item.question.id}`}>
               <QuestionCard
                 question={item.question}
-                questionNumber={item.question.id}
-                totalQuestions={0}
+                progressLabel={bankTypeLabels[item.bankType]}
                 mode="practice"
                 isBookmarked
                 onToggleBookmark={() => removeBookmark(item.bankType, item.question.id)}

@@ -20,7 +20,7 @@ export function HomePage() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center px-4 py-8">
+    <div className="flex min-h-full flex-col items-center justify-center px-4 py-8">
       {/* Title */}
       <h1 className="text-2xl font-bold text-gray-900 md:text-3xl dark:text-gray-100">
         台灣遙控無人機操作證

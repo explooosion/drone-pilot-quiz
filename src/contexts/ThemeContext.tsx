@@ -17,7 +17,7 @@ function getSystemTheme(): 'light' | 'dark' {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<ThemeMode>(() =>
-    getStorageItem<ThemeMode>(STORAGE_KEYS.theme, 'system'),
+    getStorageItem<ThemeMode>(STORAGE_KEYS.theme, 'light'),
   );
   const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>(getSystemTheme);
 

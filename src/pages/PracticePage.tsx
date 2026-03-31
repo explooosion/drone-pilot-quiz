@@ -17,8 +17,7 @@ export function PracticePage() {
   const bankType = type as QuestionBankType;
 
   const { questions, loading } = useQuestions(bankType);
-  const { currentIndex, setCurrentIndex, readIds, markAsRead, resetProgress } =
-    useProgress(bankType);
+  const { currentIndex, setCurrentIndex, markAsRead, resetProgress } = useProgress(bankType);
 
   const { practiceShowAnswer } = usePreferences();
 
@@ -106,7 +105,6 @@ export function PracticePage() {
           showAnswer={practiceShowAnswer}
           isBookmarked={bookmarks.includes(question.id)}
           onToggleBookmark={toggleBookmark}
-          isRead={readIds.has(question.id)}
           selectedAnswer={!practiceShowAnswer ? revealAnswers.get(question.id) : undefined}
           onSelectAnswer={!practiceShowAnswer ? handleRevealAnswer : undefined}
         />
